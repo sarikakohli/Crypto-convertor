@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>🚀 Crypto Price Tracker 2025</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap');
+
+  /* Background gradient animation */
+  @keyframes bgGradient {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+
+  /* Floating card animation */
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+  }
+
+  /* Fade-in for results */
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Spinner rotation */
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+
+  body {
+    margin: 0;
+    height: 100vh;
+    font-family: 'Montserrat', sans-serif;
+    background: linear-gradient(-45deg, #1e3c72, #2a5298, #1e3c72, #2a5298);
+    background-size: 400% 400%;
+    animation: bgGradient 20s ease infinite;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #f0f0f0;
+  }
+
+  .container {
+    background: rgba(255 255 255 / 0.15);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-radius: 25px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    padding: 40px 50px;
+    max-width: 400px;
+    width: 90vw;
+    text-align: center;
+    animation: float 6s ease-in-out infinite;
+  }
+
+  h1 {
+    margin-bottom: 25px;
+    font-weight: 700;
+    font-size: 2.4rem;
+    text-shadow: 0 3px 6px rgba(0,0,0,0.4);
+  }
+
+  form {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 30px;
+  }
+
+  input[type="text"] {
+    flex-grow: 1;
+    padding: 14px 18px;
+    font-size: 1.2rem;
+    border-radius: 14px;
+    border: none;
+    outline: none;
+    background: rgba(255 255 255 / 0.3);
+    color: #222;
+    font-weight: 600;
+    box-shadow: inset 0 3px 10px rgba(255 255 255, 0.35);
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  input[type="text"]::placeholder {
+    color: #666;
+    font-weight: 500;
+  }
+
+  input[type="text"]:focus {
+    background: rgba(255 255 255 / 0.5);
+    box-shadow: 0 0 20px 4px #5aff9e;
+    color: #111;
+  }
+
+  button {
+    background: #5aff9e;
+    color: #111;
+    font-weight: 700;
+    font-size: 1.2rem;
+    border: none;
+    border-radius: 14px;
+    padding: 14px 22px;
+    cursor: pointer;
+    box-shadow: 0 7px 25px rgba(90, 255, 158, 0.5);
+    transition: background-color 0.3s ease, transform 0.15s ease;
+  }
+
+  button:hover {
+    background: #3edc7a;
+    box-shadow: 0 10px 30px rgba(62, 220, 122, 0.8);
+    transform: scale(1.05);
+  }
+
+  button:active {
+    transform: scale(0.95);
+  }
+
+  .result {
+    animation: fadeIn 0.7s ease forwards;
+    opacity: 0;
+    user-select: none;
+  }
+
+  .result.visible {
+    opacity: 1;
+  }
+
+  .crypto-name {
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin-bottom: 8px;
+    text-shadow: 0 0 10px #5aff9e99;
+  }
+
+  .price {
+    font-size: 3rem;
+    font-weight: 800;
+    margin: 10px 0;
+    letter-spacing: 2px;
+    text-shadow: 0 0 15px #5aff9ebb;
+  }
+
+  .change {
+    font-weight: 700;
+    font-size: 1.3rem;
+    margin-bottom: 15px;
+  }
+
+  .change.positive {
+    color: #3af779;
+    text-shadow: 0 0 10px #3af779aa;
+  }
+
+  .change.negative {
+    color: #ff4e4e;
+    text-shadow: 0 0 10px #ff4e4eaa;
+  }
+
+  .market-cap {
+    font-weight: 600;
+    font-size: 1.1rem;
+    color: #b6fcd5;
+  }
+
+  .error {
+    color: #ff4e4e;
+    font-weight: 700;
+    margin-top: 15px;
+  }
+
+  /* Loading spinner */
+  .spinner {
+    margin: 0 auto 20px;
+    border: 6px solid rgba(255, 255, 255, 0.2);
+    border-top: 6px solid #5aff9e;
+    border-radius: 50%;
+    width: 48px;
+    height: 48px;
+    animation: spin 1s linear infinite;
+  }
+</style>
+</head>
+<body>
+  <main class="container" role="main" aria-label="Crypto price tracker">
+    <h1>🚀 Crypto Price Tracker</h1>
+    <form id="cryptoForm" aria-label="Cryptocurrency symbol input form">
+      <input
+        type="text"
+        id="cryptoInput"
+        placeholder="Enter crypto symbol (e.g., BTC)"
+        aria-label="Cryptocurrency symbol"
+        autocomplete="off"
+        required
+        maxlength="10"
+      />
+      <button type="submit" aria-label="Fetch price">Get Price</button>
+    </form>
+
+    <div id="loading" class="spinner" hidden></div>
+
+    <section id="result" class="result" aria-live="polite" aria-atomic="true"></section>
+  </main>
+
+  <script>
+    const form = document.getElementById('cryptoForm');
+    const input = document.getElementById('cryptoInput');
+    const result = document.getElementById('result');
+    const loading = document.getElementById('loading');
+
+    // Format large numbers with commas
+    function formatNumber(num) {
+      return num.toLocaleString();
+    }
+
+    // Capitalize first letter
+    function capitalize(str) {
+      return str.charAt(0).toUpperCase() + str.slice(1);
+    }
+
+    // Fetch crypto data from CoinGecko API
+    async function fetchCrypto(symbol) {
+      const lowerSymbol = symbol.toLowerCase();
+      loading.hidden = false;
+      result.classList.remove('visible');
+      result.textContent = '';
+
+      try {
+        // Search coin list to get coin id
+        const listResponse = await fetch('https://api.coingecko.com/api/v3/coins/list');
+        if (!listResponse.ok) throw new Error('Failed to fetch coin list');
+
+        const coins = await listResponse.json();
+        const coin = coins.find(c => c.symbol === lowerSymbol);
+
+        if (!coin) {
+          throw new Error('Cryptocurrency not found');
+        }
+
+        // Fetch coin price info
+        const priceResponse = await fetch(`https://api.coingecko.com/api/v3/coins/${coin.id}`);
+        if (!priceResponse.ok) throw new Error('Failed to fetch price data');
+
+        const data = await priceResponse.json();
+
+        const name = data.name;
+        const price = data.market_data.current_price.usd;
+        const change24h = data.market_data.price_change_percentage_24h;
+        const marketCap = data.market_data.market_cap.usd;
+
+        loading.hidden = true;
+
+        // Display data
+        result.innerHTML = `
+          <div class="crypto-name">${name} (${symbol.toUpperCase()})</div>
+          <div class="price">$${price.toFixed(2)}</div>
+          <div class="change ${change24h >= 0 ? 'positive' : 'negative'}">
+            24h: ${change24h.toFixed(2)}%
+          </div>
+          <div class="market-cap">Market Cap: $${formatNumber(marketCap)}</div>
+        `;
+        result.classList.add('visible');
+
+      } catch (error) {
+        loading.hidden = true;
+        result.innerHTML = `<div class="error" role="alert">${error.message}</div>`;
+        result.classList.add('visible');
+      }
+    }
+
+    form.addEventListener('submit', e => {
+      e.preventDefault();
+      const symbol = input.value.trim();
+      if (symbol.length === 0) {
+        result.innerHTML = `<div class="error" role="alert">Please enter a cryptocurrency symbol.</div>`;
+        result.classList.add('visible');
+        return;
+      }
+      fetchCrypto(symbol);
+    });
+  </script>
+</body>
+</html>
